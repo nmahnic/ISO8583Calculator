@@ -1,16 +1,9 @@
 const getInputValue = (id) => {
     let frame = document.getElementById(id).value.trim().split(' ')
-    let framePH = document.getElementById(id).placeholder.split(' ') 
-
     let length = lengthChecker(frame)
-    let lengthPH = lengthChecker(framePH)
-
 
     if(length == true){
         analizarBitmap(getBitmap(frame),true)
-    }else if(!(frame.length != 1  && !length)){
-
-        analizarBitmap(getBitmap(framePH),false)
     }else{
         lengthError()
     }   
