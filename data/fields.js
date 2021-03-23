@@ -284,7 +284,7 @@ const fields = [
         characterType: "ans",
         length: 8,
         bytesOfLength: 0,
-        description: "Card acceptor terminal identification"
+        description: "Terminal ID"
     },
     {
         field: 42,
@@ -303,9 +303,9 @@ const fields = [
     {
         field: 44,
         characterType: "an",
-        length: 25,
+        length: 18,
         bytesOfLength: 1,
-        description: "Additional response data/TerminalName/CustomerId"
+        description: "CustomerId"
     },
     {
         field: 45,
@@ -316,7 +316,7 @@ const fields = [
     },
     {
         field: 46,
-        characterType: "an",
+        characterType: "ans",
         length: 999,
         bytesOfLength: 2,
         description: "Additional data (ISO)"
@@ -382,7 +382,7 @@ const fields = [
         characterType: "ans",
         length: 999,
         bytesOfLength: 2,
-        description: "ICC data – EMV having multiple tags"
+        description: "ICC data – EMV tags"
     },
     {
         field: 56,

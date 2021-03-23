@@ -120,6 +120,8 @@ const getLength = ({field,characterType,length, bytesOfLength},dataField) => {
             result.dataField = dataField.splice(1)
             if(characterType == 'n'){
                 result.length = (parseInt(dataField[0])/2)
+            }else if(characterType == 'z'){
+                result.length = ((parseInt(dataField[0])+1)/2)
             }else{
                 result.length = parseInt(dataField[0])
             }
@@ -131,9 +133,10 @@ const getLength = ({field,characterType,length, bytesOfLength},dataField) => {
             if(characterType == 'n'){
                 console.log("ERROR 2 N")
             }else if(characterType == 'an'){
-                result.length = (((dataField[0]-30)*10)+(dataField[1]-30))
+
+                result.length = ((dataField[0])+dataField[1])
             }else{
-                result.length = (((dataField[0]))+(dataField[1]))
+                result.length = ((dataField[0]))+(dataField[1])
             }
             break
         }
