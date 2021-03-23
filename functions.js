@@ -4,12 +4,12 @@ const getInputValue = (task) => {
     console.clear()
 
     if(length == true && task == 'bitmap'){
-        analizarBitmap(getBitmap(frame),true)
+        showBitmap(getBitmap(frame))
     }else if(length == true && task == 'parse'){
         const bitmap = getBitmap(frame)
         const dataField = getDataField(frame)
-        analizarDataField(bitmap,dataField)
-        toDo("VER LA CONSOLA!!!","Presione F12, esta en BETA, capaz algun campo falla el parse","success")
+        showDataField(analizarDataField(bitmap,dataField))
+        //toDo("VER LA CONSOLA!!!","Presione F12, esta en BETA, capaz algun campo falla el parse","success")
     }else{
         lengthError()
     }   
@@ -63,37 +63,47 @@ const toDo = (text, secondText="No ha sido implementado aún", status="warning")
 }
 
 const analizarDataField = (bitmap,dataField) => {
-   // console.log(bitmap,dataField, fields)
+   
+    removeAlert()
+
    let parseredFields = []
     bitmap.forEach((elBitmap) => {
         let fieldDetails = fields.find(el => el.field == elBitmap )
 
         let aux = fieldsSubParse(dataField,fieldDetails)
         dataField = aux.dataField
-        parseredFields.push({data: aux.subField, description: aux.description})        
+        parseredFields.push({field:elBitmap, data: aux.subField, description: aux.description})        
     })
-    //console.log(parseredFields)
+    return parseredFields
 
 }
 
-const fieldsSubParse = (dataField,fieldDetails) => {
-    const aux = getLength(fieldDetails,dataField)
-    const length = aux.length
-    dataField = aux.dataField
-    if(length != undefined){
-        subField = dataField.slice(0,length)
-        dataField = dataField.splice(length)
-        console.log(
-            `Campo ${fieldDetails.field}: ${subField} - `+
-            `largo: ${length} - ${fieldDetails.description} - `+ 
-            `${fieldDetails.characterType} - type: ${fieldDetails.bytesOfLength}`)
-    }
+const showDataField = (dataField) => {
+    removeAlert()
+    showDataFieldList(dataField)
+    Alert("Calculo Exitoso!","","alert alert-success alert-dismissible")
+}
+
+const showBitmap = (bitmap) => {
+    removeAlert()
+    showBitmapList(bitmap)
+    Alert("Calculo Exitoso!","","alert alert-success alert-dismissible")
+}
+
+const fieldsFilter = (byte, i) => {
+    let campos = []
+    let ind = i*8
     
-    return {
-        dataField: dataField,
-        subField: subField,
-        description: fieldDetails.description
-    }
+    if(byte & 0b10000000) campos.push(1+ind)
+    if(byte & 0b01000000) campos.push(2+ind)
+    if(byte & 0b00100000) campos.push(3+ind)
+    if(byte & 0b00010000) campos.push(4+ind)
+    if(byte & 0b00001000) campos.push(5+ind)
+    if(byte & 0b00000100) campos.push(6+ind)
+    if(byte & 0b00000010) campos.push(7+ind)
+    if(byte & 0b00000001) campos.push(8+ind)
+
+    return campos
 }
 
 const getLength = ({field,characterType,length, bytesOfLength},dataField) => {
@@ -149,33 +159,22 @@ const getLength = ({field,characterType,length, bytesOfLength},dataField) => {
     return result
 }
 
-const analizarBitmap = (bitmap,placeHolder) => {
-    
-    removeAlert()
-
-    showList(bitmap)
-
-    if(placeHolder){
-        Alert("Calculo Exitoso!","","alert alert-success alert-dismissible")
-                
-    }else{
-        Alert("Calculo Exitoso!","No ha ingresado un bitmap, se analizo el placeHolder","alert alert-warning alert-dismissible")
+const fieldsSubParse = (dataField,fieldDetails) => {
+    const aux = getLength(fieldDetails,dataField)
+    const length = aux.length
+    dataField = aux.dataField
+    if(length != undefined){
+        subField = dataField.slice(0,length)
+        dataField = dataField.splice(length)
+        console.log(
+            `Campo ${fieldDetails.field}: ${subField} - `+
+            `largo: ${length} - ${fieldDetails.description} - `+ 
+            `${fieldDetails.characterType} - type: ${fieldDetails.bytesOfLength}`)
     }
     
-}
-
-const fieldsFilter = (byte, i) => {
-    let campos = []
-    let ind = i*8
-    
-    if(byte & 0b10000000) campos.push(1+ind)
-    if(byte & 0b01000000) campos.push(2+ind)
-    if(byte & 0b00100000) campos.push(3+ind)
-    if(byte & 0b00010000) campos.push(4+ind)
-    if(byte & 0b00001000) campos.push(5+ind)
-    if(byte & 0b00000100) campos.push(6+ind)
-    if(byte & 0b00000010) campos.push(7+ind)
-    if(byte & 0b00000001) campos.push(8+ind)
-
-    return campos
+    return {
+        dataField: dataField,
+        subField: subField,
+        description: fieldDetails.description
+    }
 }
