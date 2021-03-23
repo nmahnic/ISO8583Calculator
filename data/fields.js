@@ -253,28 +253,28 @@ const fields = [
     },
     {
         field: 37,
-        characterType: "an",
+        characterType: "ans",
         length: 12,
         bytesOfLength: 0,
         description: "Retrieval reference number"
     },
     {
         field: 38,
-        characterType: "an",
+        characterType: "ans",
         length: 6,
         bytesOfLength: 0,
         description: "Authorization identification response"
     },
     {
         field: 39,
-        characterType: "an",
+        characterType: "ans",
         length: 2,
         bytesOfLength: 0,
         description: "Response code"
     },
     {
         field: 40,
-        characterType: "an",
+        characterType: "ans",
         length: 3,
         bytesOfLength: 0,
         description: "Service restriction code"
@@ -305,11 +305,11 @@ const fields = [
         characterType: "an",
         length: 25,
         bytesOfLength: 1,
-        description: "Additional response data"
+        description: "Additional response data/TerminalName/CustomerId"
     },
     {
         field: 45,
-        characterType: "an",
+        characterType: "ans",
         length: 76,
         bytesOfLength: 1,
         description: "Track 1 data"
@@ -330,14 +330,14 @@ const fields = [
     },
     {
         field: 48,
-        characterType: "an",
+        characterType: "ans",
         length: 999,
         bytesOfLength: 2,
         description: "Additional data (private)"
     },
     {
         field: 49,
-        characterType: "n",
+        characterType: "ans",
         length: 3,
         bytesOfLength: 0,
         description: "Currency code, transaction"
@@ -372,7 +372,7 @@ const fields = [
     },
     {
         field: 54,
-        characterType: "an",
+        characterType: "ans",
         length: 120,
         bytesOfLength: 2,
         description: "Additional amounts"

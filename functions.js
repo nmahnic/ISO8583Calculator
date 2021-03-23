@@ -9,7 +9,7 @@ const getInputValue = (task) => {
         const bitmap = getBitmap(frame)
         const dataField = getDataField(frame)
         analizarDataField(bitmap,dataField)
-        toDo("VER LA CONSOLA!!!","Presione F12, del campo 46 en adelante FALLA","success")
+        toDo("VER LA CONSOLA!!!","Presione F12, esta en BETA, capaz algun campo falla el parse","success")
     }else{
         lengthError()
     }   
@@ -130,10 +130,10 @@ const getLength = ({field,characterType,length, bytesOfLength},dataField) => {
             result.dataField = dataField.splice(2)
             if(characterType == 'n'){
                 console.log("ERROR 2 N")
+            }else if(characterType == 'an'){
+                result.length = (((dataField[0]-30)*10)+(dataField[1]-30))
             }else{
-                console.log("ERROR 2 ANS")
-                console.log(field,dataField[0],dataField[1])
-                result.length = undefined
+                result.length = (((dataField[0]))+(dataField[1]))
             }
             break
         }
