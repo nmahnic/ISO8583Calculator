@@ -1,9 +1,15 @@
-const getInputValue = (id) => {
-    let frame = document.getElementById(id).value.trim().split(' ')
+const getInputValue = (task) => {
+    let frame = document.getElementById('frame').value.trim().split(' ')
     let length = lengthChecker(frame)
+    console.clear()
 
-    if(length == true){
+    if(length == true && task == 'bitmap'){
         analizarBitmap(getBitmap(frame),true)
+    }else if(length == true && task == 'parse'){
+        const bitmap = getBitmap(frame)
+        const dataField = getDataField(frame)
+        analizarDataField(bitmap,dataField)
+        toDo("VER LA CONSOLA!!!","Presione F12, del campo 46 en adelante FALLA","success")
     }else{
         lengthError()
     }   
@@ -30,26 +36,121 @@ const lengthChecker = (frame) => {
 }
 
 const getBitmap = (frame) => {
-    return frame.filter((el,i) => {if(i>8 && i<=16) return el})
+    let campos = []
+    let bitmapS = frame.filter((el,i) => {if(i>8 && i<=16) return el})
+    const bitmap = bitmapS.map(element => parseInt(element,16))
+    campos.push(bitmap.map((ele,i) => fieldsFilter(ele,i)))
+    campos = campos.flat(2)
+
+    //console.log(campos)
+    return campos
 }
 
-const toDo = (text) => {
+const getDataField = (frame) => {
+    let dataField = frame.filter((el,i) => {if(i>16) return el})
+    //console.log(dataField)
+    return dataField
+}
+
+const toDo = (text, secondText="No ha sido implementado aún", status="warning") => {
     removeAlert()
     removeTable()
     Alert(
         `${text}:`,
-        "No ha sido implementado aún",
-        "alert alert-warning alert-dismissible"
+        `${secondText}`,
+        `alert alert-${status} alert-dismissible`
     )
 }
 
-const analizarBitmap = (bitmapS,placeHolder) => {
+const analizarDataField = (bitmap,dataField) => {
+   // console.log(bitmap,dataField, fields)
+   let parseredFields = []
+    bitmap.forEach((elBitmap) => {
+        let fieldDetails = fields.find(el => el.field == elBitmap )
+
+        let aux = fieldsSubParse(dataField,fieldDetails)
+        dataField = aux.dataField
+        parseredFields.push({data: aux.subField, description: aux.description})        
+    })
+    //console.log(parseredFields)
+
+}
+
+const fieldsSubParse = (dataField,fieldDetails) => {
+    const aux = getLength(fieldDetails,dataField)
+    const length = aux.length
+    dataField = aux.dataField
+    if(length != undefined){
+        subField = dataField.slice(0,length)
+        dataField = dataField.splice(length)
+        console.log(
+            `Campo ${fieldDetails.field}: ${subField} - `+
+            `largo: ${length} - ${fieldDetails.description} - `+ 
+            `${fieldDetails.characterType} - type: ${fieldDetails.bytesOfLength}`)
+    }
+    
+    return {
+        dataField: dataField,
+        subField: subField,
+        description: fieldDetails.description
+    }
+}
+
+const getLength = ({field,characterType,length, bytesOfLength},dataField) => {
+    let result = {dataField: dataField}
+    //console.log(field, bytesOfLength)
+    switch(bytesOfLength){
+        case 0: {
+            if(characterType == 'n'){
+                if(length % 2 == 0 )
+                    result.length = length/2
+                else 
+                result.length = (length+1)/2
+            }else if(characterType == 'b'){
+                if(length % 8 == 0)
+                result.length = length/8
+            }
+            else{
+                result.length = length
+            }
+            break
+        }
+
+        case 1: {
+            result.dataField = dataField.splice(1)
+            if(characterType == 'n'){
+                result.length = (parseInt(dataField[0])/2)
+            }else{
+                result.length = parseInt(dataField[0])
+            }
+            break
+        }
+
+        case 2: {
+            result.dataField = dataField.splice(2)
+            if(characterType == 'n'){
+                console.log("ERROR 2 N")
+            }else{
+                console.log("ERROR 2 ANS")
+                console.log(field,dataField[0],dataField[1])
+                result.length = undefined
+            }
+            break
+        }
+
+        default: {
+            console.log("ERROR DEFAULT")
+            result.length = undefined
+        }
+    }
+    return result
+}
+
+const analizarBitmap = (bitmap,placeHolder) => {
     
     removeAlert()
-    console.log(bitmapS)
 
-    let nBitmap = bitmapS.map(element => parseInt(element,16))
-    showList(findFieldinBitmap(nBitmap))
+    showList(bitmap)
 
     if(placeHolder){
         Alert("Calculo Exitoso!","","alert alert-success alert-dismissible")
@@ -58,14 +159,6 @@ const analizarBitmap = (bitmapS,placeHolder) => {
         Alert("Calculo Exitoso!","No ha ingresado un bitmap, se analizo el placeHolder","alert alert-warning alert-dismissible")
     }
     
-}
-
-const findFieldinBitmap = (bitmap) => {
-    let campos = []
-    campos.push(bitmap.map((ele,i) => fieldsFilter(ele,i)))
-    campos = campos.flat(2)
-    console.log(campos)
-    return campos
 }
 
 const fieldsFilter = (byte, i) => {
